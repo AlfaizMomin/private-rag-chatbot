@@ -1,0 +1,119 @@
+<div class="chat-shell">
+
+  <!-- ═══════════════════ HEADER ═══════════════════ -->
+  <header class="chat-header">
+    <div class="header-brand">
+      <span class="brand-icon">🤖</span>
+      <div class="brand-text">
+        <h1>Alfaiz RAG Chat</h1>
+        <p class="brand-sub">Llama 3.2 · nomic-embed-text · 100% Local &amp; Private</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      @if (messages.length > 0 && !isStreaming) {
+        <button class="btn-clear" (click)="clearChat()" title="Clear conversation">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>
+            <path d="M9 6V4h6v2"/>
+          </svg>
+          Clear
+        </button>
+      }
+
+      <div class="status-pill" [class.ready]="backendReady" [class.waiting]="!backendReady">
+        <span class="status-dot"></span>
+        <span>{{ backendReady ? 'Ready' : 'Starting…' }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════ MESSAGES ═══════════════════ -->
+  <main class="messages-pane">
+
+    <!-- Initializing banner -->
+    @if (!backendReady && statusMsg) {
+      <div class="init-banner">
+        <div class="spinner"></div>
+        <span>{{ statusMsg }}</span>
+      </div>
+    }
+
+    <!-- Empty state -->
+    @if (backendReady && messages.length === 0) {
+      <div class="empty-state">
+        <div class="empty-glyph">💬</div>
+        <p class="empty-title">Ask anything from the knowledge base</p>
+        <p class="empty-hint">Answers are grounded strictly in the provided document.<br>
+          Try: <em>"What products does Alfaiz Technologies offer?"</em>
+        </p>
+      </div>
+    }
+
+    <!-- Message list -->
+    @for (msg of messages; track trackByIndex($index)) {
+      <div class="msg-row" [class.user-row]="msg.role === 'user'" [class.bot-row]="msg.role === 'bot'">
+
+        <!-- Bot avatar -->
+        @if (msg.role === 'bot') {
+          <div class="avatar bot-avatar" aria-hidden="true">🤖</div>
+        }
+
+        <!-- Bubble -->
+        <div class="bubble" [class.user-bubble]="msg.role === 'user'" [class.bot-bubble]="msg.role === 'bot'">
+          <span class="bubble-content">{{ msg.content }}</span>
+          @if (msg.isStreaming) {
+            <span class="typing-cursor" aria-label="typing">▌</span>
+          }
+        </div>
+
+        <!-- User avatar -->
+        @if (msg.role === 'user') {
+          <div class="avatar user-avatar" aria-hidden="true">👤</div>
+        }
+
+      </div>
+    }
+
+    <!-- Scroll target — always at the bottom of the list -->
+    <div #scrollAnchor aria-hidden="true"></div>
+
+  </main>
+
+  <!-- ═══════════════════ INPUT BAR ═══════════════════ -->
+  <footer class="input-bar">
+    <textarea
+      #inputRef
+      class="msg-input"
+      [(ngModel)]="inputText"
+      (keydown)="onKeydown($event)"
+      (input)="onInput($event)"
+      placeholder="Ask a question… (Enter ↵ to send · Shift+Enter for new line)"
+      [disabled]="isStreaming || !backendReady"
+      rows="1"
+      aria-label="Message input"
+    ></textarea>
+
+    <button
+      class="send-btn"
+      (click)="sendMessage()"
+      [disabled]="isStreaming || !inputText.trim() || !backendReady"
+      aria-label="Send message"
+    >
+      @if (!isStreaming) {
+        <!-- Send icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      } @else {
+        <!-- Streaming dots -->
+        <span class="sending-dots">
+          <span></span><span></span><span></span>
+        </span>
+      }
+    </button>
+  </footer>
+
+</div>

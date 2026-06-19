@@ -1,0 +1,28 @@
+/* Global reset and base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: #0c0c14;
+  color: #e4e4f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui,
+               'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default list and anchor styles */
+a   { color: inherit; text-decoration: none; }
+ul  { list-style: none; }
+
+/* Prevent textarea and input font override */
+textarea,
+input,
+button {
+  font-family: inherit;
+}

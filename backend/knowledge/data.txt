@@ -1,0 +1,66 @@
+ALFAIZ TECHNOLOGIES — COMPANY KNOWLEDGE BASE
+=============================================
+
+## Company Overview
+Alfaiz Technologies is a software development company founded in 2021 and headquartered in Pune, India.
+The company specializes in building artificial intelligence, machine learning, and full-stack web development solutions.
+Alfaiz Technologies currently employs 48 people across engineering, design, sales, and operations departments.
+The company's mission is to deliver intelligent, scalable, and privacy-focused software to businesses of all sizes.
+
+## Products & Services
+Alfaiz Technologies offers four core product lines:
+
+1. AlfaizAI Studio — A no-code AI model builder platform that lets businesses train and deploy custom ML models without writing code. It supports classification, regression, and NLP tasks.
+
+2. AlfaizChat — A white-label, on-premise conversational AI platform powered by large language models. It can be self-hosted and requires no external API calls, making it fully private.
+
+3. AlfaizInsight — A real-time business intelligence dashboard that connects to databases, cloud services, and spreadsheets to generate automated reports and charts.
+
+4. AlfaizCloud — A managed private cloud infrastructure offering for Indian SMEs that provides compute, storage, and networking on dedicated hardware.
+
+## Pricing
+- AlfaizAI Studio: Starts at ₹4,999 per month for up to 5 models. Enterprise plans are custom-quoted.
+- AlfaizChat: Starts at ₹9,999 per month. Includes unlimited messages and up to 3 custom knowledge bases.
+- AlfaizInsight: Starts at ₹2,499 per month for up to 10 data connectors.
+- AlfaizCloud: Pricing starts at ₹1,499 per month for a 2 vCPU / 4 GB RAM instance.
+
+## Leadership Team
+- CEO: Mohammed Alfaiz Khan — Co-founder with 12 years of experience in enterprise software.
+- CTO: Priya Nambiar — Leads all engineering and ML research. Former researcher at IIT Bombay.
+- COO: Rahul Deshmukh — Oversees operations, HR, and client delivery.
+- Head of Design: Sneha Joshi — Leads UX/UI and product design.
+
+## Office Locations
+- Headquarters: Magarpatta City, Pune, Maharashtra 411013
+- Branch Office: Koramangala, Bengaluru, Karnataka 560034
+- Remote employees are located across Mumbai, Hyderabad, and Delhi.
+
+## Support Policy
+- Business hours support: Monday to Friday, 9 AM to 7 PM IST.
+- Premium support (24/7): Available for enterprise customers on all products.
+- Response SLA: P1 issues resolved within 4 hours; P2 within 1 business day; P3 within 3 business days.
+- Support portal: Available to all paying customers at support.alfaiztech.in
+
+## Technology Stack
+- Backend systems are built primarily with Node.js, Python (FastAPI), and Go.
+- Frontend applications use Angular and React.
+- AI/ML pipelines use PyTorch, LangChain, and ONNX Runtime for inference.
+- Databases used: PostgreSQL, MongoDB, and Redis.
+- Infrastructure runs on a mix of AWS and dedicated bare-metal servers.
+
+## Certifications and Compliance
+- Alfaiz Technologies is ISO 27001 certified for information security management.
+- All products are GDPR-compliant and follow India's DPDPA (Digital Personal Data Protection Act) guidelines.
+- The company completed SOC 2 Type I audit in March 2024 and is pursuing SOC 2 Type II.
+
+## Partnership Program
+- Alfaiz Technologies offers a reseller partner program with 20% recurring revenue share.
+- Technology integration partners receive free API access and a dedicated integration engineer.
+- Partners can apply at partners.alfaiztech.in with a minimum 6-month commitment.
+
+## Recent Milestones
+- January 2024: Launched AlfaizChat version 3.0 with multi-language support (Hindi, Marathi, Tamil, Telugu).
+- March 2024: Closed Series A funding of ₹12 crore led by Nexus Venture Partners.
+- June 2024: Onboarded 200th enterprise customer.
+- September 2024: Opened Bengaluru branch office.
+- December 2024: Won "Best AI Startup of the Year" at the India Technology Awards.

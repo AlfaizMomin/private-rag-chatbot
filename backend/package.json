@@ -1,0 +1,21 @@
+{
+  "name": "rag-backend",
+  "version": "1.0.0",
+  "description": "Local RAG chatbot backend using LangChain + Ollama + Express",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.3.44",
+    "@langchain/core": "^0.3.47",
+    "@langchain/ollama": "^0.2.3",
+    "@langchain/textsplitters": "^0.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "langchain": "^0.3.19"
+  }
+}
