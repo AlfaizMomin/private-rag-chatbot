@@ -21,17 +21,6 @@ This application enables users to chat with a company knowledge base using natur
 
 ---
 
-
-### Streaming Responses
-
-> Add screenshot here
-
-```md
-![Streaming Response](./screenshots/streaming-response.png)
-```
-
----
-
 ## 🏗️ Architecture
 
 ```text
