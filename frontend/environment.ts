@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://parallel-matrix-backend.onrender.com/api'
+  apiBaseUrl: 'https://private-rag-chatbot.onrender.com/api'
 };
