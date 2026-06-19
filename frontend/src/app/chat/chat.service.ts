@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment';
 
 export interface StreamError {
   error: string;
@@ -7,7 +8,8 @@ export interface StreamError {
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-  private readonly endpoint = 'http://localhost:3000/api/chat/stream';
+  private readonly endpoint =
+  `${environment.apiBaseUrl}/chat/stream`;
 
   /**
    * Opens an SSE stream to the backend RAG endpoint.
@@ -105,7 +107,7 @@ export class ChatService {
   /** Checks whether the backend is ready before the user sends a message. */
   async checkHealth(): Promise<boolean> {
     try {
-      const res = await fetch('http://localhost:3000/api/health', {
+      const res = await fetch(`${environment.apiBaseUrl}/health`, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
