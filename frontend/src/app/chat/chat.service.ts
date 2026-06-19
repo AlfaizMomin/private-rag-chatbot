@@ -31,7 +31,11 @@ export class ChatService {
             throw new Error(`HTTP ${response.status}: ${body || response.statusText}`);
           }
 
-          const reader  = response.body!.getReader();
+          if (!response.body) {
+            throw new Error('The server returned an empty response body.');
+          }
+
+          const reader  = response.body.getReader();
           const decoder = new TextDecoder();
           let buffer    = '';
 
