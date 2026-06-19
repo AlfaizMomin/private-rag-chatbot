@@ -1,7 +1,7 @@
 {
   "name": "rag-backend",
   "version": "1.0.0",
-  "description": "Local RAG chatbot backend using LangChain + Ollama + Express",
+  "description": "Local RAG chatbot backend using LangChain + Gemini + Express",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "dependencies": {
     "@langchain/community": "^0.3.44",
     "@langchain/core": "^0.3.47",
-    "@langchain/ollama": "^0.2.3",
+    "@langchain/google-genai": "^0.2.0",
     "@langchain/textsplitters": "^0.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
