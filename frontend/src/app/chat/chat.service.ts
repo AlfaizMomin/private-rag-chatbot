@@ -21,6 +21,7 @@ export class ChatService {
 
       fetch(this.endpoint, {
         method: 'POST',
+        cache: 'no-store',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),
         signal: controller.signal,
@@ -104,8 +105,23 @@ export class ChatService {
   /** Checks whether the backend is ready before the user sends a message. */
   async checkHealth(): Promise<boolean> {
     try {
-      const res  = await fetch('http://localhost:3000/api/health');
-      const data = await res.json() as { status: string };
+      const res = await fetch('http://localhost:3000/api/health', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+        },
+      });
+
+      if (res.status === 304) {
+        return true;
+      }
+
+      if (!res.ok) {
+        return false;
+      }
+
+      const data = await res.json() as { status?: string };
       return data.status === 'ready';
     } catch {
       return false;
