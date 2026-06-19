@@ -5,7 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-import { ChatOllama, OllamaEmbeddings } from '@langchain/ollama';
+import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
 import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
@@ -19,10 +19,14 @@ const __dirname  = dirname(__filename);
 // ── App & config ──────────────────────────────────────────────────────────────
 const app  = express();
 const PORT = process.env.PORT         || 3000;
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
-const LLM_MODEL       = process.env.LLM_MODEL       || 'llama3.2';
-const EMBED_MODEL     = process.env.EMBED_MODEL      || 'nomic-embed-text';
-const CORS_ORIGIN     = process.env.CORS_ORIGIN      || 'http://localhost:4200';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const LLM_MODEL      = process.env.LLM_MODEL || 'gemini-2.5-flash';
+const EMBED_MODEL    = process.env.EMBED_MODEL || 'text-embedding-004';
+const CORS_ORIGIN    = process.env.CORS_ORIGIN || 'http://localhost:4200';
+
+if (!GEMINI_API_KEY) {
+  console.warn('⚠️  GEMINI_API_KEY is not set. The backend will fail during model initialization.');
+}
 
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
@@ -74,10 +78,10 @@ async function initializeRAG() {
   const docs = await splitter.createDocuments([rawText]);
   console.log(`✂️   Chunked into ${docs.length} document segments`);
 
-  // ── 3. Embeddings model (nomic-embed-text via Ollama) ───────────────────
-  const embeddings = new OllamaEmbeddings({
+  // ── 3. Embeddings model (Gemini) ───────────────────────────────────────
+  const embeddings = new GoogleGenerativeAIEmbeddings({
     model:   EMBED_MODEL,
-    baseUrl: OLLAMA_BASE_URL,
+    apiKey:  GEMINI_API_KEY,
   });
 
   // ── 4. In-memory vector store — indexed on startup ───────────────────────
@@ -91,12 +95,12 @@ async function initializeRAG() {
   });
   console.log('✅  Vector store ready\n');
 
-  // ── 5. LLM — llama3.2 via Ollama ─────────────────────────────────────────
-  const llm = new ChatOllama({
-    model:       LLM_MODEL,
-    baseUrl:     OLLAMA_BASE_URL,
-    temperature: 0,            // strict factuality — no creativity
-    numPredict:  1024,         // max tokens per response
+  // ── 5. LLM — Gemini via Google AI ───────────────────────────────────────
+  const llm = new ChatGoogleGenerativeAI({
+    model:          LLM_MODEL,
+    apiKey:         GEMINI_API_KEY,
+    temperature:    0,            // strict factuality — no creativity
+    maxOutputTokens: 1024,       // max tokens per response
   });
 
   // ── 6. Prompt template ───────────────────────────────────────────────────
@@ -132,6 +136,7 @@ async function initializeRAG() {
 app.get('/api/health', (_req, res) => {
   res.json({
     status:   isReady ? 'ready' : initError ? 'error' : 'initializing',
+    provider: 'gemini',
     model:    LLM_MODEL,
     embedder: EMBED_MODEL,
     error:    initError?.message ?? null,
