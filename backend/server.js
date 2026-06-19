@@ -167,11 +167,13 @@ app.post('/api/chat/stream', async (req, res) => {
 
   const cleanup = () => {
     clearInterval(heartbeat);
-    res.end();
+    if (!res.writableEnded) {
+      res.end();
+    }
   };
 
   // Abort stream if client disconnects early
-  req.on('close', cleanup);
+  res.on('close', cleanup);
 
   try {
     const tokenStream = await ragChain.stream({ question: message.trim() });
@@ -193,20 +195,33 @@ app.post('/api/chat/stream', async (req, res) => {
   }
 });
 
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`🌐  Server listening on http://localhost:${port}`);
+    console.log(`📡  Stream endpoint: POST http://localhost:${port}/api/chat/stream`);
+    console.log(`❤️   Health check:    GET  http://localhost:${port}/api/health\n`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      const fallbackPort = port + 1;
+      console.warn(`⚠️  Port ${port} is busy, retrying on ${fallbackPort}...`);
+      startServer(fallbackPort);
+      return;
+    }
+
+    console.error('❌  Server startup error:', err.message);
+  });
+}
+
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 initializeRAG()
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`🌐  Server listening on http://localhost:${PORT}`);
-      console.log(`📡  Stream endpoint: POST http://localhost:${PORT}/api/chat/stream`);
-      console.log(`❤️   Health check:    GET  http://localhost:${PORT}/api/health\n`);
-    });
+    startServer(PORT);
   })
   .catch((err) => {
     initError = err;
     console.error('\n❌  RAG initialization failed:', err.message);
     // Still start the server so the health endpoint reports the error
-    app.listen(PORT, () => {
-      console.log(`⚠️   Server started in degraded mode on http://localhost:${PORT}`);
-    });
+    startServer(PORT);
   });
