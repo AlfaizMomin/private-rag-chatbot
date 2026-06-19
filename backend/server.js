@@ -19,13 +19,27 @@ const __dirname  = dirname(__filename);
 // ── App & config ──────────────────────────────────────────────────────────────
 const app  = express();
 const PORT = process.env.PORT         || 3000;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const RAW_GEMINI_KEY = process.env.GEMINI_API_KEY || '';
+const RAW_GOOGLE_KEY = process.env.GOOGLE_API_KEY || '';
+const GEMINI_API_KEY = (RAW_GEMINI_KEY || RAW_GOOGLE_KEY || '').trim();
 const LLM_MODEL      = process.env.LLM_MODEL || 'gemini-2.5-flash';
-const EMBED_MODEL    = process.env.EMBED_MODEL || 'text-embedding-004';
+const EMBED_MODEL    = (process.env.EMBED_MODEL || 'gemini-embedding-2').trim();
 const CORS_ORIGIN    = process.env.CORS_ORIGIN || 'http://localhost:4200';
+const USE_PLACEHOLDER_KEY = GEMINI_API_KEY === 'your_gemini_api_key_here' || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY';
+const WHICH_KEY_ENV = RAW_GEMINI_KEY ? 'GEMINI_API_KEY' : RAW_GOOGLE_KEY ? 'GOOGLE_API_KEY' : 'none';
 
-if (!GEMINI_API_KEY) {
-  console.warn('⚠️  GEMINI_API_KEY is not set. The backend will fail during model initialization.');
+if (EMBED_MODEL === 'embedding-001' || EMBED_MODEL === 'text-embedding-004') {
+  console.warn('[env-check] EMBED_MODEL=' + EMBED_MODEL + ' is not the correct Gemini embedding identifier for this API. Use gemini-embedding-001 or gemini-embedding-2.');
+}
+
+console.log('[env-check] Using API key source:', WHICH_KEY_ENV);
+console.log('[env-check] LLM model:', LLM_MODEL);
+console.log('[env-check] Embedding model:', EMBED_MODEL);
+console.log('[env-check] CORS origin:', CORS_ORIGIN);
+
+if (!GEMINI_API_KEY || USE_PLACEHOLDER_KEY) {
+  console.warn('[env-check] No valid Gemini API key detected. The backend will fail during initialization.');
+  console.warn('[env-check] Expected one of: GEMINI_API_KEY or GOOGLE_API_KEY');
 }
 
 app.use(cors({ origin: CORS_ORIGIN }));
@@ -54,6 +68,16 @@ let isReady    = false;
 let initError  = null;
 
 async function initializeRAG() {
+  if (!GEMINI_API_KEY || USE_PLACEHOLDER_KEY) {
+    const detail = `API key source=${WHICH_KEY_ENV}; LLM_MODEL=${LLM_MODEL}; EMBED_MODEL=${EMBED_MODEL}`;
+    throw new Error(
+      'Gemini API configuration is invalid. ' +
+      `Env source: ${WHICH_KEY_ENV}. ` +
+      `Please set a real GEMINI_API_KEY or GOOGLE_API_KEY in Render. ` +
+      detail
+    );
+  }
+
   console.log('\n╔══════════════════════════════════════╗');
   console.log('║   Initializing RAG Pipeline          ║');
   console.log('╚══════════════════════════════════════╝\n');
@@ -134,6 +158,10 @@ async function initializeRAG() {
 
 // Health-check — Angular app polls this on startup
 app.get('/api/health', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   res.json({
     status:   isReady ? 'ready' : initError ? 'error' : 'initializing',
     provider: 'gemini',
